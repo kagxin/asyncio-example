@@ -24,9 +24,9 @@ def del_task(*tasks):  # 删除掉tasks
 
 
 loop = asyncio.get_event_loop()
-loop.set_debug(True)
+loop.set_debug(True)  # 打开debug模式
 
-task1 = asyncio.ensure_future(hello_world1())  # 把helloworld协程加入主事件循环进行调度
+task1 = asyncio.ensure_future(hello_world1())  # 把helloworld协程加入task调度
 task2 = asyncio.ensure_future(hello_world2())
 loop.call_at(loop.time()+5, del_task, task1, task2)  # 5s之后删除两个helloworld协程
 
