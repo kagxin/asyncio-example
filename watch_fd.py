@@ -1,5 +1,8 @@
 import asyncio
 import socket
+import logging
+
+logging.getLogger('asyncio').setLevel(logging.DEBUG)
 
 
 HOST = 'localhost'
