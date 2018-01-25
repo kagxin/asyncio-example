@@ -39,21 +39,38 @@ def main2():
     """
     loop = asyncio.get_event_loop()
     loop.set_debug(True)
-    async def as_completed_ex():
-        future1 = asyncio.Future()
-        future2 = asyncio.Future()
-        future3 = asyncio.Future()
-        asyncio.ensure_future(slow_operation('op1', future1, 1))
-        asyncio.ensure_future(slow_operation('op2', future2, 2))
-        asyncio.ensure_future(slow_operation('op3', future3, 3))
-        for f in asyncio.as_completed([future1, future3, future2]):  #等待future完成，返回最先完成的
-            res = await f
+    # async def as_completed_ex():
+    #     future1 = asyncio.Future()
+    #     future2 = asyncio.Future()
+    #     future3 = asyncio.Future()
+    #     asyncio.ensure_future(slow_operation('op1', future1, 1))
+    #     asyncio.ensure_future(slow_operation('op2', future2, 2))
+    #     asyncio.ensure_future(slow_operation('op3', future3, 3))
+    #     for f in asyncio.as_completed([future1, future3, future2]):  #等待future完成，返回最先完成的
+    #         res = await f
+    #         print(res)
+    # try:
+    #     loop.run_until_complete(as_completed_ex())
+    # finally:
+    #     loop.stop()
+    #     loop.close()
+
+    future1 = asyncio.Future()
+    future2 = asyncio.Future()
+    future3 = asyncio.Future()
+    asyncio.ensure_future(slow_operation('op1', future1, 1))
+    asyncio.ensure_future(slow_operation('op2', future2, 2))
+    asyncio.ensure_future(slow_operation('op3', future3, 3))
+    for f in asyncio.as_completed([future1, future3, future2]):  #最先完成的future会迭代出来
+        try:
+            res = loop.run_until_complete(f)
             print(res)
-    try:
-        loop.run_until_complete(as_completed_ex())
-    finally:
-        loop.stop()
-        loop.close()
+        except Exception as e:
+            print(e)
+
+    loop.stop()
+    loop.close()
+
 
 def main3():
     """
@@ -103,4 +120,4 @@ def main4():
 
 
 if __name__ == '__main__':
-    main4()
+    main2()
