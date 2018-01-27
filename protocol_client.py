@@ -1,36 +1,37 @@
 import asyncio
+import functools
 
-class EchoClientProtocol:
-    def __init__(self, message, loop):
-        self.message = message
+
+class EchoClientProtocol(asyncio.Protocol):
+    def __init__(self, loop):
         self.loop = loop
-        self.transport = None
 
     def connection_made(self, transport):
-        self.transport = transport
-        print('Send:', self.message)
-        self.transport.sendto(self.message.encode())
+        message = 'hello world!'
+        transport.write(message.encode())
+        print('Data sent: {!r}'.format(message))
 
-    def datagram_received(self, data, addr):
-        print("Received:", data.decode())
-
-        print("Close the socket")
-        self.transport.close()
-
-    def error_received(self, exc):
-        print('Error received:', exc)
+    def data_received(self, data):
+        print('Data received: {!r}'.format(data.decode()))
 
     def connection_lost(self, exc):
-        print("Socket closed, stop the event loop")
-        loop = asyncio.get_event_loop()
-        loop.stop()
+        print('The server closed the connection')
+        print('Stop the event loop')
+        self.loop.stop()
 
-loop = asyncio.get_event_loop()
-message = "Hello World!"
-connect = loop.create_datagram_endpoint(
-    lambda: EchoClientProtocol(message, loop),
-    remote_addr=('127.0.0.1', 8888))
-transport, protocol = loop.run_until_complete(connect)
-loop.run_forever()
-transport.close()
-loop.close()
+
+def main():
+    loop = asyncio.get_event_loop()
+    coro = loop.create_connection(functools.partial(EchoClientProtocol, loop=loop),
+                                  '127.0.0.1', 8881)
+
+    loop.run_until_complete(coro)
+    try:
+        loop.run_forever()
+    except Exception as e:
+        print(str(e))
+    finally:
+        loop.close()
+
+if __name__ == '__main__':
+    main()

@@ -13,7 +13,7 @@ class ProtocolServer(asyncio.Protocol):
 
     def data_received(self, data):
         clients.update({self.transport: time.time()+OUTTIME})  # 一旦接受到数据就更新timeout时间
-        message = data.decode()
+        message = data.decode()  # 回显发上来的数据
         self.transport.write(message.encode())
 
 
