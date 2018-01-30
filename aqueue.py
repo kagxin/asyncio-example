@@ -9,7 +9,7 @@ import asyncio
 
 async def produce(queue, num):
     for i in range(num):
-        await queue.put('hello')  # 队列中加入
+        await queue.put(i)  # 队列中加入
         await asyncio.sleep(1)
     await queue.put(None)
 
@@ -24,6 +24,7 @@ async def consume(queue):
 
 def main():
     loop = asyncio.get_event_loop()
+    loop.set_debug(True)
     queue = asyncio.Queue(loop=loop)
     try:
         loop.run_until_complete(asyncio.gather(
