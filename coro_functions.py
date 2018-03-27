@@ -1,5 +1,5 @@
 import asyncio
-
+from concurrent.futures import ThreadPoolExecutor
 
 async def slow_operation(op_name, future, n):
     await asyncio.sleep(n)
@@ -108,7 +108,7 @@ def main4():
     ), timeout=2)  # 2s 之后超时
 
     try:
-        done, pending = loop.run_until_complete(w)  #等待执行结束或超时
+        done, pending = loop.run_until_complete(w)  #等待执行结束或超时, 2s超时
         print(list(map(get_result, done)), pending)  # 拿到完成的fs，和pending的fs
 
         pw = asyncio.wait(pending)
@@ -118,6 +118,31 @@ def main4():
         loop.stop()
         loop.close()
 
+def main5():
+    """
+    wrap_future
+    :return:
+    """
+    def slow_operation3(op_name, n):
+        import time
+        time.sleep(n)
+        return op_name
+
+    loop = asyncio.get_event_loop()
+    loop.set_debug(True)
+
+    executor = ThreadPoolExecutor(max_workers=2)
+    c_futures = [executor.submit(slow_operation3, op, i) for i, op in enumerate(('op1', 'op2'))]  # 提交操作函数，拿到其对应的两个futures
+    a_futures = map(asyncio.wrap_future, c_futures)  # 使用asyncio.wrap_future, 把concurrent.future 的future封装成协程的future
+    gs = asyncio.gather(*a_futures)  # 使用gather，拿到多个协程的aggregating 形态
+    try:
+        rs = loop.run_until_complete(gs)  # 等待协程任务完成
+        print(rs)
+    finally:
+        loop.stop()
+        loop.close()
+
+
 
 if __name__ == '__main__':
-    main2()
+    main5()
