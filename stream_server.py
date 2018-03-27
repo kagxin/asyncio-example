@@ -5,6 +5,10 @@ https://docs.python.org/3/library/asyncio-stream.html
 这个例子也很有趣
 """
 import asyncio
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
+logging.getLogger('asyncio').setLevel(logging.DEBUG)
 
 async def handle_echo(reader, writer):
     while True:

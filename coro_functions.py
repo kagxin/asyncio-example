@@ -1,5 +1,9 @@
 import asyncio
 from concurrent.futures import ThreadPoolExecutor
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
+logging.getLogger('asyncio').setLevel(logging.DEBUG)
 
 async def slow_operation(op_name, future, n):
     await asyncio.sleep(n)
@@ -126,6 +130,8 @@ def main5():
     def slow_operation3(op_name, n):
         import time
         time.sleep(n)
+        # if op_name == 'op2':
+        #     raise ValueError('test')
         return op_name
 
     loop = asyncio.get_event_loop()

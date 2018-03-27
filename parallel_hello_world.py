@@ -1,5 +1,9 @@
 import asyncio
 from functools import partial
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
+logging.getLogger('asyncio').setLevel(logging.DEBUG)
 
 async def hello_world1():
     while True:

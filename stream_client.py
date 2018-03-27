@@ -1,4 +1,8 @@
 import asyncio
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
+logging.getLogger('asyncio').setLevel(logging.DEBUG)
 
 async def receive(reader, writer):
     while True:

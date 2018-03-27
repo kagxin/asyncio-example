@@ -1,5 +1,9 @@
 import asyncio
 import functools
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
+logging.getLogger('asyncio').setLevel(logging.DEBUG)
 
 def hello_wrold(loop, arg):
     print(arg)

@@ -6,6 +6,10 @@ THEN:
 """
 
 import asyncio
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
+logging.getLogger('asyncio').setLevel(logging.DEBUG)
 
 async def produce(queue, num):
     for i in range(num):

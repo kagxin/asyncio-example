@@ -1,6 +1,10 @@
 import asyncio
 import aiohttp
 from functools import partial
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
+logging.getLogger('asyncio').setLevel(logging.DEBUG)
 
 SRCS = ['http://cdn.daweijita.com/2016/06/tab_weiwenhuaming_secret-base_tanchang_1.gif',
         'http://cdn.daweijita.com/2016/06/tab_weiwenhuaming_secret-base_tanchang_2.gif',
